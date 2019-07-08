@@ -22,6 +22,89 @@ Please click [HERE](https://www.youtube.com/watch?v=0JaM9lpQVBs&feature=youtu.be
 
 ##
 
+# Chanllenges and decision making
+Before going to decide which technique to use in this proeject, it is important to identify the challenges in this project. Therefore, in this pages, we would firstly identifying the challenges based on the game restrictions and then carefully analysis different techniques and finally make our decision about which techniques are more suitable for this contest.
+
+## Challenges
+There are several restrictions on this project:
+- each step should be calculated within one second
+- the tournament would run in random maps
+- we only have three weeks to do the project
+- we have 15 seconds to do initial set-up before game start
+
+Based on these restrictions, our challenges are:
+- find techniques that can calculate each step within 1 sec and the output should be relatively rational
+- The agent should be generalized enough and it should be competitive in all the random maps
+- The training time of agents should be less than three weeks
+- It is important to make use of the 15 seconds to gain more information about the map before the game start
+
+## Analysis of Different Techniques
+In this section, we would carefully analysis different techniques to figure out whether they are suitable in this contest.
+
+- computation time (on game): time it takes to calculate each step.
+- ability to generalize: generalization ability across different maps.
+<table>
+    <tr>
+        <th> </th>
+        <th>Computation time(on game)</th>
+        <th>Expected Performance </th>
+        <th>Ability of Generalization</th>
+        <th>Trainning Time</th>
+        <th>Implementation Difficulty</th>
+    </tr>
+    <tr>
+        <th>Model-based MDP</th>
+        <td>long - need long computation time to get the best policy for entire map</td>
+        <td>depend on computation resource</td>
+        <td>almost impossible -  hard to convert the policy from one map to another</td>
+        <td> more than 1 hour for each mapk </td>
+        <td> Medium</th>
+    </tr>
+    <tr>
+        <th>Model-free MDP</th>
+        <td>long - need long computation time to get better performance</td>
+        <td>depend on computation resource</td>
+        <td>High</td>
+        <td> - </td>
+        <td> Medium</td>
+    </tr>
+    <tr>
+        <th>Q-learning with neural network</th>
+        <td>short</td>
+        <td>should be extremly high if well trained</td>
+        <td>High if well trained</td>
+        <td> extremely long, might take monthes</td>
+        <td> Hard</td>
+    </tr>
+    <tr>
+        <th>Heuristic Search</th>
+        <td>short</td>
+        <td>good enough with well defined heuristic</td>
+        <td>High</td>
+        <td>-</td>
+        <td>Easy</td>
+    </tr>
+    <tr>
+        <th>Q - approximate</th>
+        <td>short </td>
+        <td>good enough with well defined heuristic</td>
+        <td>High</td>
+        <td>medium, need days to train the weight</td>
+        <td>medium - need to carefully select features</td>
+    </tr>
+</table>
+
+
+From the table, we can first give up model-based MDP since it has a low ability of generalization. Second, it is noticeable that although q-learning with neural network is expected has very high performance but it requires an extremely long time to do training and is not suitable for this tournament. Third, model-based MDP requires large computation resource to calculate each step, and the performance largely depends on the time of computation, but in this contest, each step only has one second to calculate, thus, model-free MDP such as MCST might not be suitable in this contest.
+
+In contrast, A-star and Q approximate has high expected performance, short on game computation time, good ability of generalization, and relatively short time or no required time for training. Therefore, A star and Q approximate should be suitable in this contest.
+
+## Final Decision
+
+Based on the Analysis, our group decides to use:
+ * [A* Search] (Techniques/Astar Agents).
+ * [Q-learning] (Techniques/Q approximate agents).
+
 
 
 # Technique used
@@ -297,3 +380,565 @@ The basic idea of identifying the dangerous food and safe food is using BFS.
   - make the home boundary as the goal state
   - we define an count if one successor can reach the goal state, count += count
   - if count >1, the food is safe food
+
+# Experimental
+## Experiment for choosing defender
+
+#### Prliminary Experiment
+In thie experiment, we make the Attacker agent always choose action "STOP". Next, choose both Q-approximate Defender and Astar Defender versus with baselineTeam respectively in ten different races with same random seed maps. Then, we record evaluation matrix and make the follwing table:
+
+<table>
+    <tr align="center">
+        <th> Q-approximate </th>
+        <th>Times of catching invader</th>
+        <th>Times it has been eaten  </th>
+        <th>Times of deadlock</th>
+        <th>Tie or Lose</th>
+    </tr>
+    <tr align="center">
+        <th> NO.1 </th>
+        <td> 3 </td>
+        <td> 1 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.2 </th>
+        <td> 2 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.3 </th>
+        <td> 4 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.4 </th>
+        <td> 2 </td>
+        <td> 1 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.5 </th>
+       <td> 3 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.6 </th>
+       <td> 2 </td>
+       <td> 3 </td>
+       <td> 0 </td>
+       <td> Lose </td>
+    </tr>
+    <tr align="center">
+       <th> NO.7 </th>
+       <td> 1 </td>
+       <td> 0 </td>
+       <td> 1 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.8 </th>
+       <td> 4 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.9 </th>
+       <td> 1 </td>
+       <td> 1 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.10 </th>
+       <td> 3 </td>
+       <td> 2 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> SUM </th>
+       <td> 25 </td>
+       <td> 8 </td>
+       <td> 1 </td>
+       <td> 90% </td>
+    </tr>
+</table>
+
+<table>
+    <tr align="center">
+        <th> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Astar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th>Times of catching invader</th>
+        <th>Times it has been eaten  </th>
+        <th>Times of deadlock</th>
+        <th>Tie or Lose</th>
+    </tr>
+    <tr align="center">
+        <th> NO.1 </th>
+        <td> 4 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.2 </th>
+        <td> 3 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.3 </th>
+        <td> 4 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.4 </th>
+        <td> 2 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.5 </th>
+       <td> 4 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.6 </th>
+       <td> 2 </td>
+       <td> 1 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.7 </th>
+       <td> 2 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.8 </th>
+       <td> 4 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.9 </th>
+       <td> 1 </td>
+       <td> 1 </td>
+       <td> 1 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.10 </th>
+       <td> 3 </td>
+       <td> 2 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> SUM </th>
+       <td> 29 </td>
+       <td> 4 </td>
+       <td> 1 </td>
+       <td> 100% </td>
+    </tr>
+</table>
+
+In the basic test, the Q-approximate defender performed a little bit worse than the Atar defender. The Q-approximate defender has 1 defensive failure. This is because the agent is eaten too many times by the invader and wastes too much defensive time. In addition, it also had a deadlock because the updated weights cause unreasonable Q-value.
+
+For Astar defender, its defensive success rate is as high as 100%. However, there was also a deadlock situation that occurred in the trial. The reason may be due to the distance from the invader. In detail, when the distance floats up and down in the threshold value of the agent's judgment action, it is likely to cause a deadlock.
+
+In order to test the generalization, we create a modified baselineTeam with improved actions decision tree and hold a senior experiment.
+
+#### Further Experiment
+
+In this experiment, we make the Attacker agent always choose action "STOP". Next, choose both Q-approximate Defender and Astar Defender versus with modified baselineTeam respectively in ten different races with same random seed maps. Then, we record the evaluation matrix and make the following table:
+
+<table>
+    <tr align="center">
+        <th> Q-approximate </th>
+        <th>Times of catching invader</th>
+        <th>Times it has been eaten  </th>
+        <th>Times of deadlock</th>
+        <th>Tie or Lose</th>
+    </tr>
+    <tr align="center">
+        <th> NO.1 </th>
+        <td> 2 </td>
+        <td> 1 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.2 </th>
+        <td> 1 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.3 </th>
+        <td> 1 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.4 </th>
+        <td> 0 </td>
+        <td> 3 </td>
+        <td> 0 </td>
+        <td> Lose </td>
+    </tr>
+    <tr align="center">
+       <th> NO.5 </th>
+       <td> 2 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.6 </th>
+       <td> 1 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.7 </th>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> 1 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.8 </th>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> 1 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.9 </th>
+       <td> 1 </td>
+       <td> 1 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.10 </th>
+       <td> 2 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> SUM </th>
+       <td> 10 </td>
+       <td> 5 </td>
+       <td> 2 </td>
+       <td> 90% </td>
+    </tr>
+</table>
+
+<table>
+    <tr align="center">
+        <th> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Astar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th>Times of catching invader</th>
+        <th>Times it has been eaten  </th>
+        <th>Times of deadlock</th>
+        <th>Tie or Lose</th>
+    </tr>
+    <tr align="center">
+        <th> NO.1 </th>
+        <td> 3 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.2 </th>
+        <td> 2 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.3 </th>
+        <td> 2 </td>
+        <td> 0 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+        <th> NO.4 </th>
+        <td> 2 </td>
+        <td> 2 </td>
+        <td> 0 </td>
+        <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.5 </th>
+       <td> 3 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.6 </th>
+       <td> 3 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.7 </th>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> 1 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.8 </th>
+       <td> 3 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.9 </th>
+       <td> 4 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> NO.10 </th>
+       <td> 3 </td>
+       <td> 0 </td>
+       <td> 0 </td>
+       <td> Tie </td>
+    </tr>
+    <tr align="center">
+       <th> SUM </th>
+       <td> 25 </td>
+       <td> 2 </td>
+       <td> 1 </td>
+       <td> 100% </td>
+    </tr>
+</table>
+
+For Q-Approximate defender, the number of catching invaders has dropped dramatically. From this, it can be inferred that its defensive ability is low. The reason for this is that it takes a lot of time to find the invader. 
+Conversely, the Astar defender guarantees continued stability and defensive efficiency when versus the improved Attacker.
+
+In summary, we chose Astar defender as our primary agent.
+
+## Experiment for Agent
+
+#### Preliminary Experiment
+In the preliminary experiment, we selected Astar Agent and the improved baseline team for 10 matches with different random maps. The specific evaluation matrix form will be shown below:
+
+<table>
+    <tr align="center">
+        <th> </th>
+        <th>Acquired Points</th>
+        <th>Times of escape  </th>
+        <th>Times it has been eaten</th>
+        <th>win or Lose</th>
+    </tr>
+    <tr align="center">
+        <th> NO.1 </th>
+        <td> 28 </td>
+        <td> 5 </td>
+        <td> 0 </td>
+        <td> Win </td>
+    </tr>
+    <tr align="center">
+        <th> NO.2 </th>
+        <td> 28 </td>
+        <td> 4 </td>
+        <td> 0 </td>
+        <td> Win </td>
+    </tr>
+    <tr align="center">
+        <th> NO.3 </th>
+        <td> 30 </td>
+        <td> 4 </td>
+        <td> 0 </td>
+        <td> Win </td>
+    </tr>
+    <tr align="center">
+        <th> NO.4 </th>
+        <td> 30 </td>
+        <td> 5 </td>
+        <td> 0 </td>
+        <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> NO.5 </th>
+       <td> 30 </td>
+       <td> 4 </td>
+       <td> 0 </td>
+       <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> NO.6 </th>
+       <td> 29 </td>
+       <td> 3 </td>
+       <td> 0 </td>
+       <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> NO.7 </th>
+       <td> 30 </td>
+       <td> 5 </td>
+       <td> 0 </td>
+       <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> NO.8 </th>
+       <td> 30 </td>
+       <td> 4 </td>
+       <td> 0 </td>
+       <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> NO.9 </th>
+       <td> 30 </td>
+       <td> 3 </td>
+       <td> 0 </td>
+       <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> NO.10 </th>
+       <td> 28 </td>
+       <td> 2 </td>
+       <td> 0 </td>
+       <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> SUM </th>
+       <td> 313 </td>
+       <td> 39 </td>
+       <td> 0 </td>
+       <td> 100% </td>
+    </tr>
+</table>
+
+In the initial test, Astar Agent did not fail. It shows a stable performance on every map.
+
+#### Further Experiment
+
+In this experimental phase, we randomly selected 10 of the latest ranking records for analysis. The specific data is shown in the following table:
+
+<table>
+    <tr align="center">
+        <th> </th>
+        <th>Acquired Points</th>
+        <th>Times of escape  </th>
+        <th>Times it has been eaten</th>
+        <th>win or Lose</th>
+    </tr>
+    <tr align="center">
+        <th> NO.1 </th>
+        <td> 28 </td>
+        <td> 4 </td>
+        <td> 0 </td>
+        <td> Win </td>
+    </tr>
+    <tr align="center">
+        <th> NO.2 </th>
+        <td> 28 </td>
+        <td> 3 </td>
+        <td> 0 </td>
+        <td> Win </td>
+    </tr>
+    <tr align="center">
+        <th> NO.3 </th>
+        <td> 24 </td>
+        <td> 4 </td>
+        <td> 0 </td>
+        <td> Win </td>
+    </tr>
+    <tr align="center">
+        <th> NO.4 </th>
+        <td> 29 </td>
+        <td> 5 </td>
+        <td> 0 </td>
+        <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> NO.5 </th>
+       <td> 30 </td>
+       <td> 3 </td>
+       <td> 0 </td>
+       <td> Fail </td>
+    </tr>
+    <tr align="center">
+       <th> NO.6 </th>
+       <td> 8 </td>
+       <td> 7 </td>
+       <td> 0 </td>
+       <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> NO.7 </th>
+       <td> 13 </td>
+       <td> 9 </td>
+       <td> 1 </td>
+       <td> Win </td>
+    </tr>
+    <tr align="center">
+       <th> NO.8 </th>
+       <td> -1 </td>
+       <td> 4 </td>
+       <td> 0 </td>
+       <td> Lose </td>
+    </tr>
+    <tr align="center">
+       <th> NO.9 </th>
+       <td> -3 </td>
+       <td> 6 </td>
+       <td> 1 </td>
+       <td> Lose </td>
+    </tr>
+    <tr align="center">
+       <th> NO.10 </th>
+       <td> -5 </td>
+       <td> 4 </td>
+       <td> 3 </td>
+       <td> Lose </td>
+    </tr>
+    <tr align="center">
+       <th> SUM </th>
+       <td> 151</td>
+       <td> 43 </td>
+       <td> 5 </td>
+       <td> 60% </td>
+    </tr>
+</table>
+
+As can be seen from the table, in the many games we won, we all achieved a big victory. Even in some sessions, our agent ate all of the opponent's beans and successfully escaped the hunt several times. This is related to our strategy of using offense and defense conversion. When there is no invader at our site, our defender will become the trap of Attacker's robbing each other. When we ran away, we set two Goal states to be used to escape. One is to run away to home, and the other is to go to eat the capsule. Once the capsule is eaten, we will give priority to eat those beans that we have marked as dangerous. This shows that our Defender has a good decision tree and Heuristic. 
+
+However, in some cases, we are unable to handle the problem very well. For example, when Defender turned white ghost for a long time, our Attacker does not have the decision that changing back to Defender. Therefore, in the long-term Scared time, we will lose our defensive power.
+
+Importantly, there are still a small number of games lost, which is still caused by the deadlock situation. The cause of the deadlock is still due to the distance from the opponent's defender. When the distance floats above and below the action selection threshold. In order to deal with this deadlock, the code has been modified several times but we found it unavoidable.
+
+In addition, there is a Fail because of a program exception, because the beans on the field have already been eaten during our offensive and defensive transition. In this case, Attacker still chooses to eat beans. The code has been fixed and has a top ranking on the leaderboard.
