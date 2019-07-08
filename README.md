@@ -14,7 +14,16 @@ This wiki is mainly divided into three parts:
  * Q-approximate Agents
 
 3. Experimental
-4. Possible Improvements
+
+## important info
+Only myTeam.py and Q-approximateAgents.py are developed by our group, other files are from UC Berkely. </br>
+
+## Run program instruction
+The commondline below allows A* agents play agianst baseline team
+> python capture.py -r myTeam -b baselineTeam 
+
+The commondline below allows q-approximate agents play agianst baseline team
+> python capture.py -r Q-approximateAgents -b baselineTeam 
 
 
 ## Youtube presentation
