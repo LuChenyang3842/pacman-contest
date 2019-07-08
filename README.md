@@ -2,7 +2,6 @@
 
 The purpose of this project is to implement Pac-Man Autonomous Agent that can play and compete in a tournament, the detail description of the tournament can be found from http://ai.berkeley.edu/contest.html.
 
-![General_Pic](/uploads/d024ed699934497368562ea8d14d283a/General_Pic.PNG)
 
 
 This wiki is mainly divided into three parts:
